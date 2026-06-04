@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>        
+        <record id="view_add_liters_wizard_bi_form" model="ir.ui.view">
+            <field name="name">add.liters.view.form.bi.form</field>
+            <field name="model">liters.liters</field>
+            <field name="arch" type="xml">
+		        <form string="Add Liters">
+					<group>
+						<group>
+							<label for="liters"/>
+							<div name="liters">
+								<field name="liters" class="oe_inline"/> Galones
+							</div>
+						</group>
+						<group>
+							<field name="liter_price"/>
+						</group>
+					</group>	
+					<footer>
+				    	<button  string="Guardar" type="object" name="add_liters" class="btn btn-primary"/>
+				    	o
+				        <button string="Cancelar" class="oe_link" special="cancel" />
+				    </footer>				
+		        </form>
+           </field>
+        </record>
+
+        <record id="action_add_liters" model="ir.actions.act_window">
+        <field name="name">Agregar Galones</field>
+        <field name="res_model">liters.liters</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_add_liters_wizard_bi_form"/>
+        <field name="target">new</field>
+        <field name="binding_view_types">form</field>
+    	</record>
+
+    </data>
+</openerp>

@@ -1,0 +1,7 @@
+
+Version: 14.0.0.1  | 15/04/2021 :-
+	- Issue of vehicle Fuel Log menu was not visible added it.
+
+14.0.0.2 : 1. fixed issue of traceback while edit the Vehicles Fuel Logs.
+           2. fixed issue of liter value warning in Vehicles Fuel Logs.
+           3. fixed issue of Previous Odometer Reading in Vehicles Fuel Logs.

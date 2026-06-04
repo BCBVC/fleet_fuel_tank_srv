@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>  
+    <record id='fleet_vehicle_cost_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.tree</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <tree string="Costo Vehicular Combustible">
+                <field name="currency_id" invisible="1"/>
+                <field name="vehicle_id"/>
+                <field name="description"/>
+                <field name="cost_subtype_id"/>
+                <field name="date"/>
+                <field name="amount" sum="Cost" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_cost_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.kanban</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong>
+                                    <field name="vehicle_id"/>
+                                    <span class="float-right"><field name="date"/></span>
+                                </strong>
+                            </div>
+                            <div>
+                                <field name="cost_subtype_id"/>
+                                <span class="float-right"><field name="amount" widget="monetary"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_cost_view_pivot' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.pivot</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <pivot string="Vehicles costs">
+                <field name="vehicle_id" type="row"/>
+                <field name="cost_type" type="row"/>
+                <field name="date" interval="year" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_cost_view_graph' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.graph</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <graph string="Vehicles costs">
+                <field name="vehicle_id"/>
+                <field name="date" interval="year"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_cost_indicative_view_pivot' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.pivot</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <pivot string="Vehicles costs" >
+                <field name="vehicle_id" type="row"/>
+                <field name="cost_type" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_cost_indicative_view_graph' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.graph</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <graph string="Vehicles costs">
+                <field name="parent_id" type="row"/>
+                <field name="cost_type" type="col"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_costs_view_search' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.search</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <search string="Vehicles costs" >
+                <field name="vehicle_id" />
+                <field name="cost_subtype_id"/>
+                <field name="date"/>
+                <field name="parent_id"/>
+                <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
+                <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
+                <group expand="1" string="Agrupar por">
+                    <filter name="groupby_cost_type" context="{'group_by': 'cost_type'}" string="Cost Type"/>
+                    <filter name="groupby_cost_subtype_id" context="{'group_by': 'cost_subtype_id'}" string="Cost Subtype"/>
+                    <filter name="groupby_vehicle_id" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
+                    <filter name="groupby_parent_id" context="{'group_by': 'parent_id'}" string="Parent"/>
+                    <separator/>
+                    <filter name="groupby_date" context="{'group_by': 'date:month'}" string="Date" help="Vehicle Costs by Date"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_costs_view_form' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.cost.form</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle costs">
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+                    <group col="2" string="Cost Details">
+                        <group>
+                            <field name="vehicle_id" />
+                            <field name="cost_subtype_id"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="description"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="parent_id" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_costs_view_graph" model="ir.ui.view">
+        <field name="name">fleet.vehicle.cost.graph</field>
+        <field name="model">fleet.vehicle.cost</field>
+        <field name="arch" type="xml">
+            <graph string="Costs Per Month" stacked="True">
+                <field name="date" type="row"/>
+                <field name="vehicle_id" type="col"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_costs_action' model='ir.actions.act_window'>
+        <field name="name">Vehicles Costs</field>
+        <field name="res_model">fleet.vehicle.cost</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="context">{"search_default_parent_false" : True, "search_default_groupby_vehicle_id" : True,}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Crear nuevo costo
+            </p><p>
+            Manage the costs for your different vehicles.
+            Costs are created automatically from services, contracts and fuel logs.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="fleet_vehicle_costs_action" parent="fleet.fleet_vehicles" id="fleet_vehicle_costs_menu" groups="fleet.fleet_group_manager"/>
+
+
+
+    <record id='fleet_vehicle_log_fuel_view_form' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.log.fuel.form</field>
+        <field name="model">fleet.vehicle.log.fuel</field>
+        <field name="arch" type="xml">
+            <form string="Registros de combustible">
+                <header>
+                <button string="Confirmar" type="object" name="action_confirm" 
+                        states="a_draft" class="oe_highlight" groups="fleet_fuel_tank.orden_gas_confirma" confirm="Está seguro de CONFIRMAR la presente Orden de Combustible?"/>
+                    <button string="Cancelar" type="object" name="action_cancel" 
+                        states="a_draft" groups="fleet_fuel_tank.orden_gas_confirma" confirm="Está seguro de CANCELAR la presente Orden de Combustible?"/>
+                    <button string="Aprobar" type="object" name="action_approve"  
+                        states="b_confirm" class="oe_highlight" groups="fleet_fuel_tank.orden_gas_aprobar" confirm="Está seguro de aprobar la presente Orden de Combustible?"/>
+                    <!-- <button string="Finalizar" type="object" name="action_fin"  
+                        states="c_approve" class="oe_highlight" groups="fleet.clave_14_maquinistas" confirm="Antes de finalizar, cerciórese de haber llenado los campos: Galones, Valor Subtotal, Lectura de Odómetro y Número de Factura utilizando obligatoriamente el punto (.) como separador decimal. Una vez confirmados estos datos, está seguro de finalizar el proceso?"/>  -->
+
+                    <!-- <button name="action_imprimir" string="Impresión gasolineras Maquinistas" type="object" class="oe_highlight" states="c_approve" confirm="Este documento es válido para habilitar la solicitud de combustible en las gasolineras. Desea continuar con la impresión?"/> -->
+
+
+                    <button string="Impresión firma digital Sala Situacional" type="object" name="action_manage_pdf"
+                            states="f_fin" class="oe_highlight" groups="fleet.clave_14_central_comunicaciones" 
+                            confirm="¿Desea gestionar el archivo PDF asociado a este registro?"/>   
+
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="a_draft,b_confirm,c_approve"/>         
+                </header>
+
+                <sheet>
+                    <h2>
+                        <field name="name" class="oe_inline" readonly="1"/>
+                    </h2>
+                    <group>
+                        <group string="Datos iniciales obligatorios para solicitud de combustible" style="color: black;">
+                            <field name="vehicle_id" attrs="{'readonly':[('state','!=','a_draft')]}"/>
+                            <field name="vehicle_code" attrs="{'readonly':[('state','!=','a_draft')]}"/>
+                            <field name="employee_id" attrs="{'readonly':[('state','!=','a_draft')]}" readonly="1"/>
+                            <field name="fire_station" attrs="{'readonly':[('state','!=','a_draft')]}"/>
+                            <field name="fuel_tank_id" attrs="{'readonly':[('state','!=','a_draft')]}"/>
+                            <field name="gasoline_type" attrs="{'readonly':[('state','!=','a_draft')]}" />
+                            <field name="prev_odo" attrs="{'readonly':[('state','!=','a_draft')]}" placeholder="Registre su kilometraje de salida"/>
+                            <field name="date_solicitud" readonly="1"/>
+                            <field name="show_subscription_info" invisible="1"/>
+                            <field name="button_clicked" invisible="1"/> <br/> <br/>
+
+                            <button name="action_imprimir" string="Impresión gasolineras maquinistas" 
+                                    type="object" groups="fleet.clave_14_maquinistas" class="oe_highlight" states="c_approve" 
+                                    confirm="Este documento es válido para habilitar la solicitud de combustible en las gasolineras. 
+                                    Desea continuar con la impresión?"/> 
+                                    
+                            <br/> <br/> <br/>
+
+                            <button name="action_show_subscription_info" string="Formulario impresión firma digital" 
+                                    groups="fleet.clave_14_maquinistas" 
+                                    confirm="Este formulario es necesario para emitir el comprobante de la orden de combustible para la firma digital. Recuerde que ninguno de los datos debe quedar en 0 y que si su selección fue un Bidón, deberá colocar los valores de manera incremental y secuencial. Desea continuar?" 
+                                    type="object" 
+                                    attrs="{'invisible': [('button_clicked', '=', False)]}" 
+                                    class="btn-primary"/>
+                        </group>
+
+                        <group string="Información obligatoria para emitir el comprobante de órden de combustible para suscripción" attrs="{'invisible': [('show_subscription_info', '=', False)]}">
+                            <field name="inv_ref" placeholder="Ingrese los cuatro últimos dígitos"/>
+                            <field name="liter" placeholder="Registre los galones solicitados"/>
+                            <field name="amount" placeholder="Registre el subtotal de la factura"/>  
+                            <field name="charging_mileage" options="{'pattern': '[0-9]*'}" placeholder="Registre su kilometraje de carga"/>
+                            <field name="arrival_mileage" options="{'pattern': '[0-9]*'}" placeholder="Registre su kilometraje de llegada"/>
+                            <!-- <field name="price_per_liter" invisible="1"/> -->
+                            <field name="qr_code" widget='image' class="oe_avatar float-left"/>  
+                            <button string="Finalizar" type="object" name="action_fin"  
+                                    states="c_approve" class="oe_highlight" groups="fleet.clave_14_maquinistas" confirm="Antes de finalizar, cerciórese de haber llenado los campos: Galones, Valor Subtotal, Lectura de Odómetro y Número de Factura utilizando obligatoriamente el punto (.) como separador decimal. Una vez confirmados estos datos, está seguro de finalizar el proceso?"/> <br/><br/><br/>                                           
+                            <button name="action_firma" string="Impresión firma digital Maquinistas" type="object" class="oe_highlight" 
+                                    states="f_fin" groups="fleet.clave_14_maquinistas" confirm="Este documento requiere ser descargado y suscrito por el usuario Maquinista. 
+                                                    Una vez suscrito, presione el botón EDITAR y 
+                                                    cargue el archivo presionando el botón SUBA SU ARCHIVO ubicado en la sección 
+                                                    GESTIÓN DE ORDEN DE COMBUSTIBLE SUSCRITA - MAQUINISTAS"/> 
+                        </group>   
+
+                    </group>
+
+                    <!-- <group>
+                    
+                        <group string="Detalles del odómetro">                                                      
+                                <div>
+                                    <field name="previous_odometer"  class="oe_inline"/>  kilometros
+                                </div>
+                                <field name="odometer" invisible="1"/>        
+                                <field name="previous_odometer"  string="Previo Odómetro" class="oe_inline" /> Kilometros 
+                        </group> 
+
+                        <group string="Detalle adicional">
+                            <field name="date" attrs="{'readonly':[('state','!=','a_draft')]}" /> 
+                            <field name="purchaser_id" invisible="1" />
+                            <field name="odometer_id" invisible="1" />
+                            <field name="vehicle_plate" invisible="1" />                       
+                            <field name="vendor_id"/> 
+                        </group> 
+                        
+                    </group> -->
+
+                    <group string="Gestión de órdenes de combustible suscritas" attrs="{'invisible': [('is_firma_digital_clicked', '=', False)]}">
+                            <!-- Campo para confirmar si el PDF ha sido cargado -->
+                            <field name="is_firma_digital_clicked" invisible="1"/>
+                            <field name="is_pdf_confirmed" invisible="1"/>
+                            
+                            <!-- Campo para cargar/descargar PDF -->
+                            <field name="pdf_file_maquinistas" widget="binary" string="Carga / Descarga Orden de Combustible - Maquinistas" filename="pdf_file_maquinistas_name"/>
+                            <field name="pdf_file_maquinistas_name" invisible="1"/> <br/>
+
+                            <!-- Botón para confirmar -->
+                            <button name="action_confirm_pdf_upload" type="object" string="Confirmar Carga PDF"
+                                    attrs="{'invisible': [('pdf_file_maquinistas', '=', False)], 'readonly': [('is_pdf_confirmed', '=', True)]}" 
+                                    class="oe_highlight" groups="fleet.clave_14_central_comunicaciones"/> <br/>
+
+                            <!-- Campo para el segundo archivo PDF, visible solo después de confirmar -->
+                            <field name="pdf_file_sala_situacional" widget="binary" string="Carga / Descarga orden de cobmbustible - Sala situacional" filename="pdf_file_sala_situacional_name"
+                                attrs="{'invisible': [('is_pdf_confirmed', '=', False)]}" />
+                            <field name="pdf_file_sala_situacional_name" invisible="1"/>
+
+                        </group>
+
+
+    <group string='Descarga de órdenes de combustible por categoría' groups="fleet.clave_14_administradores">
+
+                        <group string='2024' groups="fleet.clave_14_administradores">
+                            <group string="QUINTA CHICA - CONAK CIA. LTDA">
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=1&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Enero
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=2&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Febrero 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=3&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Marzo 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=4&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Abril
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=5&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Mayo
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=6&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Junio
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=7&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Julio 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=8&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Agosto
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=9&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Septiembre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=10&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Octubre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=11&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Noviembre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=quinta_chica&amp;mes=12&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Diciembre
+                                </a> <br/>
+                            </group>
+
+                            <group string='GAPAL - COMERCIAL PALACIOS REYES CIA. LTDA' groups="fleet.clave_14_administradores">
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=1&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Enero
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=2&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Febrero 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=3&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Marzo 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=4&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Abril
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=5&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Mayo
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=6&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Junio
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=7&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Julio 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=8&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Agosto
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=9&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Septiembre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=10&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Octubre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=11&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Noviembre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=gapal&amp;mes=12&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Diciembre
+                                </a> <br/>
+                            </group>
+                        
+                            <group string='	ELOY ALFARO - KIESEL S.A' groups="fleet.clave_14_administradores">
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=1&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Enero
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaroa&amp;mes=2&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Febrero 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=3&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Marzo 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=4&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Abril
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=5&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Mayo
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=6&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Junio
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=7&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Julio 
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=8&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Agosto
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=9&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Septiembre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=10&amp;anio=2024" class="btn btn-primary" 
+                                target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Octubre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=11&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores" style='text-align:left'>
+                                    Noviembre
+                                </a> <br/>
+                                <a href="http://192.168.27.30:8069/download/fleet_pdfs?tipo=eloy_alfaro&amp;mes=12&amp;anio=2024" class="btn btn-primary" 
+                                    target="_blank" role="button" groups="fleet.clave_14_administradores">
+                                    Diciembre
+                                </a> <br/>
+                            </group>
+                    </group>
+                                            
+    </group>
+
+                    <notebook>
+
+                        <page string="Información general">
+                            <group string="Notas">
+                                <field name="notes" placeholder="Escriba aquí información extra" nolabel="1"/>
+                            </group>                          
+                        </page>
+
+                        <page string="Información de Aprobadores">
+                            <group>
+                                <group>
+                                <field name="confirm_by"/>
+                                <field name="approve_by"/>
+                                <field name="fin_by"/>
+
+
+                                </group>
+                                <group>
+                                    <field name="confirm_date"/>
+                                    <field name="approve_date"/>
+
+                                    <field name="fin_date"/>
+
+                                </group>
+                                
+                            </group>
+                        </page>
+                    </notebook>
+
+                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_log_fuel_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.log.fuel.tree</field>
+        <field name="model">fleet.vehicle.log.fuel</field>
+        <field name="arch" type="xml">
+            <tree string="Fuel Logs">
+                <field name="name"/>
+                <field name="date" />
+                <field name="state" decoration-success="state == 'a_draft'" decoration-danger="state == 'cancel'" decoration-warning="state == 'b_confirm'" decoration-info="state == 'c_approve'" widget="badge" optional="show"/>
+                <field name="vehicle_id" invisible="1"/>
+                <field name="vehicle_code" />
+                <field name="employee_id" />
+                <field name="purchaser_id" invisible="1"/>
+                <field name="inv_ref" invisible="1"/>
+                <field name="vendor_id" invisible="1"/>
+                <field name="prev_odo" />
+                <!-- <field name="odometer_unit" /> -->
+                <field name="liter" />
+                <field name="price_per_liter" invisible="1"/>
+                <field name="amount" sum="Price"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_log_fuel_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.log.fuel.kanban</field>
+        <field name="model">fleet.vehicle.log.fuel</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by='state' create="false">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_headings mt4">
+                                    <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                </div>
+                            </div>
+                            <div>
+                                <strong>
+                                    <field name="vehicle_id"/>
+                                    <span class="float-right"><field name="date"/></span>
+                                </strong>
+                            </div>
+                            <!-- <div>
+                                <span><field name="purchaser_id"/></span>
+                            </div> -->
+                            <div>
+                                <span><field name="liter"/> Liter</span>
+                                <span class="float-right"><field name="amount"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_log_fuel_view_search' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.log.fuel.search</field>
+        <field name="model">fleet.vehicle.log.fuel</field>
+        <field name="arch" type="xml">
+            <search string="Vehicles Fuel Logs" >
+                <field name="vehicle_id" />
+                <field name="date"/>
+                <field name="purchaser_id" />
+                <field name="liter" />
+                <field name="amount" sum="Price"/>
+                <!-- <group expand="0" string="Group By">
+                    <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                </group> -->
+            </search>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_fuel_view_graph" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.fuel.graph</field>
+        <field name="model">fleet.vehicle.log.fuel</field>
+        <field name="arch" type="xml">
+            <graph string="Fuel Costs Per Month">
+                <field name="vehicle_id" type="row"/>
+                <field name="cost_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_log_fuel_action' model='ir.actions.act_window'>
+        <field name="name">Registros de combustible</field>
+        <field name="res_model">fleet.vehicle.log.fuel</field>
+        <field name="view_mode">tree,form,kanban,graph</field>
+        <!-- <field name="view_mode">tree,kanban,form,graph</field> -->
+        <field name="context">{"search_default_groupby_vehicle" : True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Crear un nuevo registro de combustible
+            </p><p>
+            Aquí puede añadir entradas de repostaje para todos los vehículos.
+            </p>
+        </field>
+    </record>
+    <record id="seq_idea" model="ir.sequence">
+        <field name="name">combustible_sequencer</field>
+        <field name="code">combustible.carga</field>
+        <field name="prefix">OC-BCBVC-</field>
+        <field name="padding">7</field>
+    </record>
+
+    <menuitem action="fleet_vehicle_log_fuel_action" parent="fleet.fleet_vehicles" id="fleet_vehicle_log_fuel_menu" groups="fleet.fleet_group_user"/>
+</odoo>

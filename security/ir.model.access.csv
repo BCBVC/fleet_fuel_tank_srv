@@ -1,0 +1,14 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_compsuption_great_average","access.compsuption.great.average","fleet_fuel_tank.model_compsuption_great_average",fleet.fleet_group_user,1,0,0,0
+"access_compsuption_fuel_tank","access.fuel.tank","fleet_fuel_tank.model_fuel_tank",fleet.fleet_group_user,1,0,0,0
+"access_compsuption_fuel_tank_manager","access.fuel.tank.manager","fleet_fuel_tank.model_fuel_tank",fleet.fleet_group_manager,1,1,1,1
+"access_compsuption_fuel_tank_fuel_filling_history","access.fuel.filling.history","fleet_fuel_tank.model_fuel_filling_history",fleet.fleet_group_user,1,1,1,1
+"access_compsuption_fuel_tank_liters_liters","access.liters.liters","fleet_fuel_tank.model_liters_liters",fleet.fleet_group_user,1,1,1,1
+"access_compsuption_fleet_vehicle_log_fuel","access.compsuption.great.average","fleet_fuel_tank.model_compsuption_great_average",fleet.fleet_group_manager,1,1,1,1
+"access_compsuption_odometer_filling_history","access.odometer.filling.history","fleet_fuel_tank.model_odometer_filling_history",fleet.fleet_group_user,1,1,1,1
+access_fleet_vehicle_log_fuel,access.fleet.vehicle.log.fuel,model_fleet_vehicle_log_fuel,fleet.fleet_group_user,1,1,1,1
+access_fleet_vehicle_cost_user,access.fleet.vehicle.cost,model_fleet_vehicle_cost,fleet.fleet_group_user,1,1,1,0
+
+
+
+

@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_fleet_vehicle_inherit_bi" model="ir.ui.view">
+            <field name="name">fleet.vehicle.form.view.inherit.bi</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='color']" position="after">
+                    <label for="consuption_average"/>
+                    <div name="consuption_average">
+                        <field name="consuption_average" class="oe_inline"/> l /100km
+                    </div>
+                    <label for="grant_consuption_average"/>
+                    <div name="grant_consuption_average">
+                        <field name="grant_consuption_average" class="oe_inline"/> l /100km
+                    </div>
+
+                </xpath>
+                <xpath expr="//field[@name='co2_standard']" position="after">
+                        <field name="consumption_average_history_ids" nolabel="0">
+                        <tree string="Consumption Average History" editable="False">
+                            <field name="great_average"/>
+                            <field name="vehicle_id" invisible="1"/>
+                            <field name="consumption_average_id" invisible="1"/>     
+                            <field name="modified_date" />
+                            <field name="employee_id"/>
+                        </tree>
+                        </field>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_fleet_vehicle_tree_inherit_bi" model="ir.ui.view">
+            <field name="name">fleet.vehicle.tree.view.inherit.bi</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='acquisition_date']" position="after">
+                    <field name="consuption_average"/>
+                    <field name="grant_consuption_average"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id='bi_form_fuel_tank1' model='ir.ui.view' >
+            <field name="name">bi.form.fuel.tank</field>
+            <field name="model">fuel.tank</field>
+            <field name="arch" type="xml">
+                <form string="Fual Tank">
+                    <sheet>
+                        <group>
+                            <group string="Tank Details">
+                                <field name="name"/>
+                                <field name="location"/>
+                                <field name="last_clean_date"/>
+                            </group>
+
+                            <group string="Fuel Details">
+                                <field name="capacity"/>
+                                <label for="liters" />
+                                <div name="liters">
+                                    <field name="liters" class="oe_inline" /> Litres
+                                </div>
+                                <field name="average_price"/>
+                                <button type="action" name="%(action_add_liters)d" string="Add Fuel" class="btn btn-primary"/>
+                            </group>
+                        </group>
+                        
+                        <group >
+                            <group string="Last Filling Details">
+                                <field name="last_filling_date"/>
+                                <field name="last_filling_amount"/>
+                                <label for="last_filling_price_liter"/>
+                                <div name="last_filling_price_liter">
+                                    <field name="last_filling_price_liter" /> Per Liter
+                                </div>
+                            </group>
+                            <group string="Consumption Details">
+                                <field name="percentage_fuel"/>
+                                <field name="last_fuel_adding_date"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Fuel Filling History">
+
+                                    <field name="fule_filling_history_ids" nolabel="1">
+                                            <tree string="Fuel Filling History">
+                                            <field name="filling_date"/>
+                                            <field name="price_per_liter"/>
+                                            <field name="fuel_filling_id" invisible="1"/>
+                                            <field name="fuel_liter" sum="Total Liters"/>
+                                            </tree>
+                                    </field>
+
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record  id='fuel_tank_config_tree' model='ir.ui.view'>
+            <field name="name">fuel.tank.config.tree</field>
+            <field name="model">fuel.tank</field>
+            <field name="arch" type="xml">
+                <tree string="Fuel Tank" >
+                    <field name="name"/>
+                    <field name="location"/>
+                    <field name="capacity"/>
+                    <field name="liters"/>
+                    <field name="percentage_fuel"/>
+                    <field name="last_fuel_adding_date"/>
+                    <field name="last_filling_amount"/>
+                    <field name="last_filling_price_liter"/>
+                    <field name="average_price"/>
+                    <field name="last_clean_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='fleet_vehicle_fuel_tank_action' model='ir.actions.act_window'>
+            <field name="name">Fuel Tank</field>
+            <field name="res_model">fuel.tank</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">tree,form</field>           
+        </record>
+
+        <menuitem id="fleet_vehicle_fuel_tank_menu" action="fleet_vehicle_fuel_tank_action" parent="fleet.fleet_configuration"/>    
+    </data>
+</odoo>

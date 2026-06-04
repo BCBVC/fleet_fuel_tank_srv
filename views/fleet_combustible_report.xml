@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="report_fleet_vehicle_log_fuel" model="ir.actions.report">
+        <field name="name">Solicitud Combustible Firmas</field>
+        <field name="model">fleet.vehicle.log.fuel</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fleet_fuel_tank.report_combustible</field>
+        <field name="report_file">fleet_fuel_tank.report_combustible</field>
+        <field name="print_report_name">'ORDEN - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_fleet_vehicle_log_fuel"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_combustible" >
+        <t t-call="web.html_container">
+        <t t-call="web.basic_layout">
+
+            <t t-foreach="docs" t-as="doc">
+
+            <table style="width:100%; border-collapse: collapse;"><td style=" text-align: center; font-size: 20px; font-weight: bolder;"><img t-att-src="'/fleet_fuel_tank/static/src/img/Logo_bcbvc_rojo.png'" style=" max-height: 180px;"/><br/><br/></td></table> 
+            
+            <h5 style="width:100%; text-align: center; font-size: 40px;"><strong>ORDEN DE COMBUSTIBLE</strong></h5><br/>
+                
+                <h5 style="font-size: 30px; margin-left: 5px;">
+                    <strong> Orden #: </strong>
+                    <span style="font-size: 30px; margin-left: 165px;" t-field="doc.name"/>
+                </h5>
+
+                    <table class="table table-sm o_main_table" style="width:100%;">
+
+                        <tbody class="sale_tbody" style="font-size: 30px;">
+                            <tr>
+                                <td style="width:30%;">
+                                    <strong>Fecha Hora:</strong>
+                                </td>
+                                
+                                <td>
+                                    <span t-field="doc.date_solicitud"/>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td style="width:50px;">
+                                    <strong>Vehículo:</strong>
+                                </td>
+                                
+                                <td>
+                                    <span t-field="doc.vehicle_id.codigo_vehi"/>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td style="width:50px;">
+                                    <strong>Placa:</strong>
+                                </td>
+                                
+                                <td>
+                                    <span t-field="doc.vehicle_id.license_plate"/>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td style="width:50px;">
+                                    <strong>Estación:</strong>
+                                </td>
+                                
+                                <td>
+                                    <span t-field="doc.fire_station"/>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td style="width:50px;">
+                                    <strong>Maquinista:</strong>
+                                </td>
+                                
+                                <td>
+                                    <span style=" font-size: 30px;" t-field="doc.employee_id"/>
+                                </td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                <td style="width:50px;">
+                                    <strong>Kilometraje de carga:</strong>
+                                </td>
+                                
+                                <td>
+                                    <span t-field="doc.prev_odo"/>
+                                </td>
+                                
+                            </tr>
+
+                            <tr>
+                                <td style="width:50px;">
+                                    <strong>Gasolinera: </strong>
+                                </td>
+                                
+                                <td>
+                                    <span t-field="doc.fuel_tank_id"/>
+                                </td>
+                                
+                            </tr>
+
+                            <tr>
+                                <td style="width:50px;">
+                                    <strong>Tipo de gasolina: </strong>
+                                </td>
+                                
+                                <td>
+                                    <span t-field="doc.gasoline_type"/>
+                                </td>
+                                
+                            </tr>
+
+
+
+                        </tbody>
+                    </table>
+                    
+                        <table style="width:100%; border: 1px solid black; border-collapse: collapse; font-size: 30px;">
+                            <tr>
+                                <th style="border: 1px solid black; border-collapse: collapse;">Galones</th> 
+                                <th style="border: 1px solid black; border-collapse: collapse;">Valor Subtotal</th>
+                            </tr>
+                            <tr style="border: 1px solid black; border-collapse: collapse;">
+                                <t t-if="doc.liter &gt; 0">
+                                    <td style="border: 1px solid black; border-collapse: collapse;"><span t-field="doc.liter"/></td>
+                                </t> 
+                                <t t-if="doc.liter == 0">
+                                <td style="border: 1px solid black; border-collapse: collapse;"> <br/> <br/></td>
+                                </t>
+                                <t t-if="doc.liter &gt; 0">
+                                <td style="border: 1px solid black; border-collapse: collapse;"><span t-field="doc.amount"/></td>
+                                </t> 
+                                <t t-if="doc.liter == 0">
+                                <td style="border: 1px solid black; border-collapse: collapse;"><br/> <br/> </td> 
+                                </t> 
+                            </tr>
+                        </table> <br/> <br/> <br/> <br/> 
+
+                    <br/> 
+                    <table style="width:100%; border-collapse: collapse; font-size: 20px;">
+    
+                    <td colspan="2" style=" text-align: center;">
+						<br/>______________________________________<br/>		
+								Solicitante:
+						</td>
+                
+							
+                    </table>
+
+                    <table style="width:100%;  border-collapse: collapse; font-size: 25px">
+    
+                        <td colspan="2" style=" text-align: center;">
+                            <span style=" font-size: 25px;" t-field="doc.employee_id" />
+                        </td>
+
+							
+                    </table>
+                    
+                    <table style="width:100%;  border-collapse: collapse; font-size: 20px">
+
+                        <td colspan="2" style=" text-align: center;">
+							<br/> <br/>______________________________________<br/> 
+								Confirmado por:
+						</td><br/>                						
+                    </table>
+
+                    <table style="width:100%;  border-collapse: collapse;">
+    
+                        <td colspan="2" style=" text-align: center; font-size: 25px">
+                            <span style=" font-size: 25px;" t-field="doc.confirm_by" />
+                        </td>
+					
+                    </table>
+
+            </t>      
+            </t>
+        </t>
+
+    </template>
+</odoo>

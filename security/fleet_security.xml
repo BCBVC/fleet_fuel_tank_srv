@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="orden_gas_confirma" model="res.groups">
+			<field name="name">Confirma solicitud de Combustible</field>
+			<field name="category_id" ref="base.module_category_hidden"/>
+		</record>
+        <record id="orden_gas_aprobar" model="res.groups">
+			<field name="name">Aprobar solicitud de Combustible</field>
+			<field name="category_id" ref="base.module_category_hidden"/>
+		</record>
+    </data>
+</odoo>
