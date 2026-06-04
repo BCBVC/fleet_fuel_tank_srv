@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <record id="paperformat_custom_combustible" model="report.paperformat">
+        <field name="name">Formato Combustible Personalizado</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">160</field>  
+        <field name="page_width">80</field>   
+        <field name="orientation">Portrait</field> 
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">2</field>
+        <field name="margin_right">2</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
     <record id="report_fleet_vehicle_log_fuel_imp" model="ir.actions.report">
         <field name="name">Solicitud Combustible Gasolineras </field>
         <field name="model">fleet.vehicle.log.fuel</field>
@@ -7,8 +23,9 @@
         <field name="report_name">fleet_fuel_tank.report_combustibleimp</field>
         <field name="report_file">fleet_fuel_tank.report_combustibleimp</field>
         <field name="print_report_name">'ORDEN - %s' % (object.name)</field>
-        <field name="binding_model_id" ref="model_fleet_vehicle_log_fuel"/>
+        <field name="binding_model_id" ref="model_fleet_vehicle_log_fuel"></field>
         <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_custom_combustible"/>
     </record>
 
     <template id="report_combustibleimp" >
@@ -17,18 +34,20 @@
 
         <t t-foreach="docs" t-as="doc">
 
-            <table style="width:100%; border-collapse: collapse;"><td style=" text-align: center; font-size: 20px; font-weight: bolder;"><img t-att-src="'/fleet_fuel_tank/static/src/img/Logo_bcbvc_rojo.png'" style=" max-height: 300px;"/><br/><br/></td></table> 
+            <table style="width:100%; border-collapse: collapse;"><td style=" text-align: center; font-size: 5px; font-weight: bolder;"><img t-att-src="'/fleet_fuel_tank/static/src/img/Logo_bcbvc_rojo.png'" style=" max-height: 50px;"/><br/></td></table> 
 
-                <h5 style="width:100%; text-align: center; font-size: 50px;"><strong>ORDEN DE COMBUSTIBLE</strong></h5><br/>
+                <h5 style="width:100%; text-align: center; font-size: 15px;"><strong>ORDEN DE COMBUSTIBLE</strong></h5>
                 
-                <h5 style="font-size: 40px; margin-left: 5px;">
-                    <strong> Orden #: </strong>
-                    <span style="font-size: 40px; margin-left: 68px;" t-field="doc.name"/>
-                </h5>
+                <div style="width:100%; text-align:center; margin-top:4px; margin-bottom:6px;">
+                    <div style="font-size:14px; font-weight:bold;">Orden #:</div>
+                    <div style="font-size:18px !important; font-weight:bold; line-height:1;">
+                        <span t-esc="doc.name"/>
+                    </div>
+                </div>
 
                     <table class="table table-sm o_main_table" style="width:100%;">
 
-                        <tbody class="sale_tbody" style="font-size: 40px;">
+                        <tbody class="sale_tbody" style="font-size: 12px;">
                             <tr>
                                 <td style="width:20%;">
                                     <strong>Fecha/Hora:</strong>
@@ -75,7 +94,7 @@
                                 </td>
                                 
                                 <td>
-                                    <span style="font-size: 40px;" t-field="doc.employee_id"/>
+                                    <span style="font-size: 12px;" t-field="doc.employee_id"/>
                                 </td>
                                 
                             </tr>
@@ -107,19 +126,19 @@
                     </table>
                     
 
-                    <table style="width:100%; height:5%; border: 1px solid black; border-collapse: collapse; font-size: 40px;">
+                    <table style="width:100%; height:5%; border: 1px solid black; border-collapse: collapse; font-size: 12px;">
 
                             <tr>
                                 <th style="border: 1px solid black; border-collapse: collapse;">Kilometraje de carga:</th> 
                             </tr>
                             
-                            <tr style="border: 1px solid black; border-collapse: collapse;">
+                            <tr style="border: 1px solid black; border-collapse: collapse; height: 40px;">
                             
                                 <t t-if="doc.charging_mileage &gt; 0">
-                                    <td style="border: 1px solid black; border-collapse: collapse;"><span t-field="doc.charging_mileage"/></td>
+                                    <td style="border: 1px solid black; border-collapse: collapse; padding: 8px;"><span t-field="doc.charging_mileage"/></td>
                                 </t> 
                                 <t t-if="doc.charging_mileage == 0">
-                                <td style="border: 1px solid black; border-collapse: collapse;"> <br/> <br/></td>
+                                <td style="border: 1px solid black; border-collapse: collapse; padding: 8px;"> <br/> <br/></td>
                                 </t>
                             
                             </tr>
@@ -128,13 +147,13 @@
                                 <th style="border: 1px solid black; border-collapse: collapse;">Galones:</th> 
                             </tr>
 
-                            <tr style="border: 1px solid black; border-collapse: collapse;">
+                            <tr style="border: 1px solid black; border-collapse: collapse; height: 40px;">
                             
                                 <t t-if="doc.liter &gt; 0">
-                                    <td style="border: 1px solid black; border-collapse: collapse;"><span t-field="doc.liter"/></td>
+                                    <td style="border: 1px solid black; border-collapse: collapse; padding: 8px;"><span t-field="doc.liter"/></td>
                                 </t> 
                                 <t t-if="doc.liter == 0">
-                                <td style="border: 1px solid black; border-collapse: collapse;"> <br/> <br/></td>
+                                <td style="border: 1px solid black; border-collapse: collapse; padding: 8px;"> <br/> <br/></td>
                                 </t>
                             
                             </tr>
@@ -143,28 +162,25 @@
                                 <th style="border: 1px solid black; border-collapse: collapse;">Valor Subtotal (Dólares):</th>
                             </tr>
                         
-                            <tr style="border: 1px solid black; border-collapse: collapse;">
+                            <tr style="border: 1px solid black; border-collapse: collapse; height: 40px;">
                             
                                 <t t-if="doc.amount &gt; 0">
-                                <td style="border: 1px solid black; border-collapse: collapse;"><span t-field="doc.amount"/></td>
+                                <td style="border: 1px solid black; border-collapse: collapse; padding: 8px;"><span t-field="doc.amount"/></td>
                                 </t> 
                                 <t t-if="doc.amount == 0">
-                                <td style="border: 1px solid black; border-collapse: collapse;"><br/> <br/></td>
+                                <td style="border: 1px solid black; border-collapse: collapse; padding: 8px;"><br/> <br/></td>
                                 </t> 
                                 
                             </tr>
                     
-                    </table> <br/>
-                    
-                    
-                    
+                    </table>
                     
                     <table style="width:100%; border-collapse: collapse;"> 
-                        <td style=" text-align: center; font-size: 35px; font-weight: bolder;"><br/> 
+                        <td style=" text-align: center; font-size: 10px; font-weight: bolder;"><br/> 
                                 APROBADO
-                                    <img t-att-src="'/fleet_fuel_tank/static/src/img/check.jpg'" style="max-height: 75px;"/>
+                                    <img t-att-src="'/fleet_fuel_tank/static/src/img/check.jpg'" style="max-height: 25px;"/>
                                     <br/>
-                            <img t-attf-src="data:image/*;base64,{{doc.qr_code}}" width="400" height="400"/>
+                            <img t-attf-src="data:image/*;base64,{{doc.qr_code}}" width="50" height="50"/>
 		            	</td>
                     </table>
 
