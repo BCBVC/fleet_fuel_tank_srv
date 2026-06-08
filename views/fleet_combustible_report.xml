@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <record id="paperformat_custom_combustible_firmas" model="report.paperformat">
+        <field name="name">Formato Solicitud Combustible Firmas</field>
+        <field name="default" eval="False"/>
+        <field name="format">custom</field>
+        <field name="page_height">350</field>  
+        <field name="page_width">210</field>   
+        <field name="orientation">Portrait</field> 
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">2</field>
+        <field name="margin_left">2</field>
+        <field name="margin_right">2</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
     <record id="report_fleet_vehicle_log_fuel" model="ir.actions.report">
         <field name="name">Solicitud Combustible Firmas</field>
         <field name="model">fleet.vehicle.log.fuel</field>
@@ -9,6 +25,7 @@
         <field name="print_report_name">'ORDEN - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_fleet_vehicle_log_fuel"/>
         <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_custom_combustible_firmas"/>
     </record>
 
     <template id="report_combustible" >
@@ -159,6 +176,8 @@
 							
                     </table>
                     
+                    <br/>
+                    <br/>
                     <table style="width:100%;  border-collapse: collapse; font-size: 20px">
 
                         <td colspan="2" style=" text-align: center;">
