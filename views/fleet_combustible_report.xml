@@ -103,7 +103,7 @@
                                 </td>
                                 
                                 <td>
-                                    <span t-field="doc.prev_odo"/>
+                                    <span t-field="doc.charging_mileage"/>
                                 </td>
                                 
                             </tr>
